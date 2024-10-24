@@ -4,6 +4,13 @@ import CardItem from './CardItem.vue'
 defineProps({
   goods: Array,
 })
+
+/* const onclickAdd = () => {
+  this.isAdded = !this.isAdded
+}
+const onclickFavorite = () => {
+  this.isFavorite = !this.isFavorite
+} */
 </script>
 
 <template>

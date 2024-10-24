@@ -1,35 +1,59 @@
 <script setup>
+// Чтобы рендерить карточки товаров при первом запуске страницы нужен хук onMounted
 import { onMounted, ref, reactive, watch } from 'vue'
+// А с помощью библиотеки axios получаем данные с API
 import axios from 'axios'
 
 import HeaderItem from './components/HeaderItem.vue'
 import CardList from './components/CardList.vue'
 import DrawerElement from './components/DrawerElement.vue'
 
+// Чтобы отрендерить данные в веб-приложении нам понадобится реактивное состояние в компоненте, а точнее ref
 const goods = ref([])
+
+// Фильтры и поиск
+// Чтобы не дублировать код для поиска сделаем лучше одну переменную filters
+/* const sortBy = ref('')
+const searchQuery = ref('') */
+
 const filters = reactive({
   sortBy: 'title',
   searchQuery: '',
 })
 
+/* const onChangeSelect = evt => {
+  sortBy.value = evt.target.value
+} */
+// Теперь и функцию следует немного изменить
 const onChangeSelect = evt => {
   filters.sortBy = evt.target.value
 }
 
+// Функция, отлавливающая значение, введённое в строку поиска
 const onChangeSearchInput = evt => {
   filters.searchQuery = evt.target.value
 }
 
+/* onMounted(() => {
+  axios
+    .get('https://c3357c2bd0a9e3f6.mokky.dev/goods')
+    .then(resp => console.log(resp.data))
+}) */
+// Или можно записать тоже самое в конструкции async await:
+// Позволяет определить что поменялось и, исходя из этого, применять ту или иную функцию. Здесь он следит за изменением переменной sortBy в которую отправляются разные value из options, при выборе select пользователем, после чего сортирует и рендерит заново, учитывая тот или иной фильтр.
+// Если нужно следить за изменениями конкретных свойств, то запишем так: () => filters.sortBy
 const fetchItems = async () => {
   try {
     const params = {
       sortBy: filters.sortBy,
+      // searchQuery: filters.searchQuery,
     }
 
     if (filters.searchQuery) {
       params.title = `*${filters.searchQuery}*`
     }
-
+    /* `https://c3357c2bd0a9e3f6.mokky.dev/goods?title=*${filters.searchQuery}*&sortBy=${filters.sortBy}`,
+      В axios можно не так писать так громоздко, а вместо этого: */
     const { data } = await axios.get(
       'https://c3357c2bd0a9e3f6.mokky.dev/goods',
       { params },
