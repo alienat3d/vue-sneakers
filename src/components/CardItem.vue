@@ -30,7 +30,7 @@ defineProps({
       <div class="flex justify-between mt-5">
         <div class="flex flex-col">
           <span class="text-slate-400 uppercase">Цена:</span>
-          <b>{{ price }} руб.</b>
+          <strong>{{ price }} руб.</strong>
         </div>
         <img
           @click="onclickAdd"
