@@ -8,7 +8,7 @@
 
     <div class="flex flex-col">
       <div class="flex justify-between mb-2">
-        <p>Мужские зелёные кроссовки Nike</p>
+        <p class="capitalize">Мужские зелёные кроссовки Nike</p>
         <img
           class="self-start opacity-50 transition hover:opacity-100 cursor-pointer"
           src="/img/btn-remove.svg"
