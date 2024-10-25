@@ -1,4 +1,5 @@
 <script setup>
+// 1.15 Также вытащим id в пропсах
 defineProps({
   id: Number,
   imageUrl: String,

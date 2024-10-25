@@ -1,3 +1,7 @@
+<!-- 1.5 Вставляем функцию события по клику открывающую корзину товаров через defineEmits сюда в script -->
+<script setup>
+const emit = defineEmits(['openDrawer'])
+</script>
 <template>
   <header class="flex justify-between border-b border-gray-200 px-10 py-8">
     <div class="flex items-center gap-4">
@@ -13,8 +17,11 @@
     </div>
 
     <ul class="flex items-center gap-10">
+      <!-- 1.6 Далее встроим в закладку корзины функцию, которая будет её открывать -->
+      <!-- [Переход в DrawerHeader] -->
       <li
         class="flex items-center gap-3 text-gray-500 cursor-pointer transition hover:text-black"
+        @click="() => emit('openDrawer')"
       >
         <img src="/img/cart.svg" alt="Иконка продуктовая тележка" />
         <b>1205 руб.</b>
