@@ -7,8 +7,13 @@ import CardList from './components/CardList.vue'
 import DrawerElement from './components/DrawerElement.vue'
 
 const goods = ref([])
+// 2.0 Теперь нужно добиться, чтобы по клику на кнопку "+" на карточках товара, они добавлялись в корзину и отображались в ней. Для этого создадим переменную cart
+const cart = ref([])
+
 // 1.0 Разработка корзины товаров. И первое что нужно сделать — это её отображать. Вёрстка уже готова и осталось подключить к ней функционал. Для начала нужно, чтобы по клике на закладку корзины появлялся компонент DrawerElement. Точнее он будет отображаться только в случае, если флажок drawerOpened в положении true, что будет означать, что корзина открыта. (Изначально она будет закрыта, т.е. в положении false)
 const drawerOpened = ref(false)
+
+// 3.0 Займёмся рендером добавленных в корзину товаров. ↓
 
 // 1.2 Также создадим две функции, которые будут открывать и закрывать корзину товаров
 const openDrawer = () => (drawerOpened.value = true)
@@ -19,6 +24,24 @@ const filters = reactive({
   sortBy: 'title',
   searchQuery: '',
 })
+
+// 3.7 Сделаем ещё две функции для добавления и удаления из корзины
+// [Переход в CartItemList]
+const addToCart = item => {
+  cart.value.push(item)
+  item.isAdded = true
+}
+
+const removeFromCart = item => {
+  cart.value.splice(cart.value.indexOf(item), 1)
+  item.isAdded = false
+}
+
+// 2.1 Создадим функцию добавления товаров в корзину. В ней должна быть проверка, что в корзине пока ещё нет товара, который мы хотим добавить
+// 3.8 А здесь тогда переименуем функцию в onClickAddPlus и вставим в неё теперь новосозданные выше функции
+// [Переход в CardList]
+const onClickAddPlus = item =>
+  !item.isAdded ? addToCart(item) : removeFromCart(item)
 
 const onChangeSelect = evt => (filters.sortBy = evt.target.value)
 
@@ -78,7 +101,7 @@ const fetchItems = async () => {
       sortBy: filters.sortBy,
     }
 
-    if (filters.searchQuery) params.title = `*${filters.searchQuery}*`
+    if (filters.searchQuery) params.title = '*' + filters.searchQuery + '*'
 
     const { data } = await axios.get(
       'https://c3357c2bd0a9e3f6.mokky.dev/goods',
@@ -102,10 +125,16 @@ onMounted(async () => {
 
 watch(filters, fetchItems)
 
-// 1.3 Т.к. у нас есть стрелочка закрытия корзины внутри неё, то нам нужно прокинуть функцию закрытия корзины товаров в дочерний компонент DrawerHeader дочернего компонента DrawerElement, а это уже кейс для props drilling, и тут вполне логично будет использовать метод, использующий provide & inject. Создадим некий объединяющий обе функции открытия и закрытия корзины "cartActions". Теперь у нас будут две глобальные переменные с вышеозначенными функциями, которые можно использовать в любом дочернем компоненте App.
-provide('cartActions', {
+// 1.3 Т.к. у нас есть стрелочка закрытия корзины внутри неё, то нам нужно прокинуть функцию закрытия корзины товаров в дочерний компонент DrawerHeader дочернего компонента DrawerElement, а это уже кейс для props drilling, и тут вполне логично будет использовать метод, использующий provide & inject. Создадим некий объединяющий обе функции открытия и закрытия корзины "cart". Теперь у нас будут две глобальные переменные с вышеозначенными функциями, которые можно использовать в любом дочернем компоненте App.
+// 3.1 Поместим также и в provide содержимое корзины cart.
+// [Переход в CartItemList]
+// 3.6 У нас уже есть функция addToCart, которая добавляет товар в корзину. Добавим её также в provide, чтобы потом прокинуть в компонент CartItemList. ↑
+provide('cart', {
+  cart,
   openDrawer,
   closeDrawer,
+  addToCart,
+  removeFromCart,
 })
 </script>
 
@@ -143,7 +172,15 @@ provide('cartActions', {
           </div>
         </div>
       </div>
-      <CardList :goods="goods" @add-to-favorite="addToFavorite" />
+      <!-- 2.2 Мы добавим функцию add-to-cart здесь -->
+      <!-- [Переход в CardList] -->
+      <!-- 3.9 Здесь поменяем функцию c addToCart на onClickAddPlus -->
+      <!-- [Переход в CartItemList] -->
+      <CardList
+        :goods="goods"
+        @add-to-favorite="addToFavorite"
+        @add-to-cart="onClickAddPlus"
+      />
     </div>
   </div>
 </template>
