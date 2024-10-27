@@ -1,4 +1,5 @@
 <script setup>
+// 3.11 Добавим emit
 const emit = defineEmits(['onClickRemove'])
 
 defineProps({
@@ -8,6 +9,9 @@ defineProps({
   price: Number,
 })
 </script>
+<!-- 3.4 Теперь нужно отрендерить сами данные в компоненте элемента корзины. Поэтому добавляем всё необходимое в defineProps и затем вставляем в вёрстку для динамического заполнения. -->
+<!-- [Переход в CartItemList] -->
+<!-- 3.12 Добавим событие по клику для удаления товара из корзины -->
 <template>
   <div class="flex items-center border border-slate-100 p-4 rounded-xl gap-4">
     <img class="w-16" :src="imageUrl" :alt="title" />

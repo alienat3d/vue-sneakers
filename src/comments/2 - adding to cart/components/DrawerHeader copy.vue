@@ -1,10 +1,13 @@
 <script setup>
 import { inject } from 'vue'
 
+// 1.7.0 А здесь мы уже применим глобальную функцию закрытия корзины через inject. А точнее с помощью деструктуризации вытащим closeDrawer из cart
 const { closeDrawer } = inject('cart')
 </script>
 <template>
   <div class="flex items-center gap-5 mb-8">
+    <!-- 1.7.1 Ну и стрелочке передадим функционал закрытия корзины товаров -->
+    <!-- [Переход в App] -->
     <svg
       class="opacity-30 rotate-180 cursor-pointer transition hover:opacity-100 hover:-translate-x-1"
       width="16"

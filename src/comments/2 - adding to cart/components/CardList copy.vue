@@ -4,7 +4,9 @@ import CardItem from './CardItem.vue'
 defineProps({
   goods: Array,
 })
-
+// 2.3 Вытаскиваем здесь функцию addToCart и добавляем её в CardItem
+// 2.4 Также передаём свойство isAdded
+// [Переход в App]
 const emit = defineEmits(['addToFavorite', 'addToCart'])
 </script>
 <template>

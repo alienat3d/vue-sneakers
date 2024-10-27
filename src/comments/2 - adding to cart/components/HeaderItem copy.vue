@@ -1,9 +1,5 @@
+<!-- 1.5 Вставляем функцию события по клику открывающую корзину товаров через defineEmits сюда в script -->
 <script setup>
-// 1.1 Вытащим это числе total-price из App.vue
-defineProps({
-  totalPrice: Number,
-})
-
 const emit = defineEmits(['openDrawer'])
 </script>
 <template>
@@ -21,14 +17,14 @@ const emit = defineEmits(['openDrawer'])
     </div>
 
     <ul class="flex items-center gap-10">
+      <!-- 1.6 Далее встроим в закладку корзины функцию, которая будет её открывать -->
+      <!-- [Переход в DrawerHeader] -->
       <li
         class="flex items-center gap-3 text-gray-500 cursor-pointer transition hover:text-black"
         @click="() => emit('openDrawer')"
       >
         <img src="/img/cart.svg" alt="Иконка продуктовая тележка" />
-        <!-- 1.2 А потом здесь мы его используем -->
-        <!-- [Переход в App] -->
-        <b>{{ totalPrice }} руб.</b>
+        <b>1205 руб.</b>
       </li>
       <li
         class="flex items-center gap-3 text-gray-500 cursor-pointer transition hover:text-black"
