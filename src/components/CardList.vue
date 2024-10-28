@@ -8,7 +8,8 @@ defineProps({
 const emit = defineEmits(['addToFavorite', 'addToCart'])
 </script>
 <template>
-  <div class="grid grid-cols-4 gap-5 mt-10">
+  <!-- 2.1 Также и сюда подключим директиву анимации -->
+  <div v-auto-animate class="grid grid-cols-4 gap-5 mt-10">
     <CardItem
       v-for="item in goods"
       :key="item.id"

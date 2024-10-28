@@ -10,11 +10,11 @@
 
 - <img src="https://img.shields.io/badge/HTML5-E34F26?logo=html5&logoColor=fff" alt="HTML5 badge">
 - <img src="https://img.shields.io/badge/CSS3-1572B6?logo=css3" alt="CSS3 badge">
-- <img src="https://img.shields.io/badge/Tailwind%20CSS-06B6D4?logo=tailwindcss" alt="Tailwind CSS badge">
+- <img src="https://img.shields.io/badge/Tailwind%20CSS-06B6D4?logo=tailwindcss&logoColor=fff" alt="Tailwind CSS badge">
 - <img src="https://img.shields.io/badge/JavaScript-F7DF1E?logo=javascript&logoColor=fff" alt="JavaScript badge">
-- <img src="https://img.shields.io/badge/Vue.JS-4FC08D?logo=vuedotjs" alt="Vue.JS badge">
+- <img src="https://img.shields.io/badge/Vue.JS-4FC08D?logo=vuedotjs&logoColor=fff" alt="Vue.JS badge">
 - <img src="https://img.shields.io/badge/NPM-CB3837?logo=npm" alt="NPM badge">
-- <img src="https://img.shields.io/badge/Vite-646CFF?logo=vite" alt="Vite badge">
+- <img src="https://img.shields.io/badge/Vite-646CFF?logo=vite&logoColor=fff" alt="Vite badge">
 
 ## NPM-packages that are used for development:
 
