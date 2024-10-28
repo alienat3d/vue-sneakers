@@ -139,10 +139,17 @@ const fetchItems = async () => {
     console.error(error)
   }
 }
-
+// 1.1 Далее мы укажем, чтобы при загрузке страницы проверяем localStorage на наличие записи "cart" и если есть, то трансформируем её из строки в массив, а если нет, то вернётся пустой массив.
 onMounted(async () => {
+  cart.value = JSON.parse(localStorage.getItem('cart')) || []
+
   await fetchItems()
   await fetchFavorites()
+
+  goods.value = goods.value.map(item => ({
+    ...item,
+    isAdded: cart.value.some(cartItem => cartItem.id === item.id),
+  }))
 })
 
 watch(filters, fetchItems)
@@ -151,6 +158,15 @@ watch(cart, () => {
   goods.value = goods.value.map(item => ({ ...item, isAdded: false }))
   closeDrawer()
 })
+
+// 1.0 Реализуем сохранение товаров в корзине в localStorage. watch будет следить за содержимым корзины cart и при этом делать глубокую проверку.
+watch(
+  cart,
+  () => {
+    localStorage.setItem('cart', JSON.stringify(cart.value))
+  },
+  { deep: true },
+)
 
 provide('cart', {
   cart,
