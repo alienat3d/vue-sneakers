@@ -1,4 +1,5 @@
 <script setup>
+// 1.1 Вытащим это числе total-price из App.vue
 defineProps({
   totalPrice: Number,
 })
@@ -25,6 +26,8 @@ const emit = defineEmits(['openDrawer'])
         @click="() => emit('openDrawer')"
       >
         <img src="/img/cart.svg" alt="Иконка продуктовая тележка" />
+        <!-- 1.2 А потом здесь мы его используем -->
+        <!-- [Переход в App] -->
         <b>{{ totalPrice }} руб.</b>
       </li>
       <li
