@@ -4,7 +4,7 @@ import axios from 'axios'
 
 import HeaderItem from './components/HeaderItem.vue'
 import CardList from './components/CardList.vue'
-import DrawerElement from './components/DrawerElement.vue'
+import DrawerComp from './components/DrawerComp.vue'
 
 const goods = ref([])
 const cart = ref([])
@@ -23,7 +23,7 @@ const totalPrice = computed(() =>
 )
 
 // 2.1 Создадим функцию, которая будет вычислять налог от суммы цен в корзине
-// [Переход в DrawerElement]
+// [Переход в DrawerComp]
 const vatPrice = computed(() => Math.round((totalPrice.value * 20) / 100))
 
 // 4.6 Добавим функцию cartIsEmpty, которая будет проверять есть ли что-то в корзине
@@ -176,11 +176,11 @@ provide('cart', {
 
 <template>
   <!-- 2.0 Теперь нам нужно сделать, чтобы и в панели корзины считалась общая сумма товаров и налог от неё. Поэтому и сюда мы передаём total-price, а также vat для налога. ↑ -->
-  <!-- 3.2 Добавим новую функцию в компонент DrawerElement -->
-  <!-- [Переход в DrawerElement] -->
-  <!-- 4.2 Добавим эту функцию в компонент DrawerElement -->
-  <!-- [Переход в DrawerElement] -->
-  <DrawerElement
+  <!-- 3.2 Добавим новую функцию в компонент DrawerComp -->
+  <!-- [Переход в DrawerComp] -->
+  <!-- 4.2 Добавим эту функцию в компонент DrawerComp -->
+  <!-- [Переход в DrawerComp] -->
+  <DrawerComp
     v-if="drawerOpened"
     :total-price="totalPrice"
     :vat-price="vatPrice"

@@ -1,12 +1,14 @@
+<!-- 1.0 Теперь поработаем с избранным. В принципе структура будет похожа на ту, что мы имеем на главной, но только отображаться будут лишь те товары, что мы отметили добавлением в избранное нажав на кнопку сердечка. -->
+<!-- 1.1 Но сперва установим Vue Router для мгновенных переходов, как описано на странице: https://router.vuejs.org/installation.html -->
+<!-- 1.2 В структуре файлов в ./src/ создадим папку "pages", где будут храниться страницы. Главная страница будет HomeView.vue -->
 <script setup>
-import { onMounted, ref, reactive, provide, watch, computed } from 'vue'
+import { ref, provide, watch, computed } from 'vue'
 import axios from 'axios'
 
 import HeaderItem from './components/HeaderItem.vue'
-import CardList from './components/CardList.vue'
-import DrawerElement from './components/DrawerElement.vue'
+import DrawerComp from './components/DrawerComp.vue'
 
-const goods = ref([])
+/* Корзина */
 const cart = ref([])
 
 const isCreatingOrder = ref(false)
@@ -29,11 +31,6 @@ const openDrawer = () => (drawerOpened.value = true)
 
 const closeDrawer = () => (drawerOpened.value = false)
 
-const filters = reactive({
-  sortBy: 'title',
-  searchQuery: '',
-})
-
 const addToCart = item => {
   cart.value.push(item)
   item.isAdded = true
@@ -44,6 +41,8 @@ const removeFromCart = item => {
   item.isAdded = false
 }
 
+// 1.6 Функции, которые используются в разных компонентах, как createOrder оставим на верхнем уровне.
+// [Переход в HomeView]
 const createOrder = async () => {
   try {
     isCreatingOrder.value = true
@@ -62,103 +61,6 @@ const createOrder = async () => {
   }
 }
 
-const onClickAddPlus = item =>
-  !item.isAdded ? addToCart(item) : removeFromCart(item)
-
-const onChangeSelect = evt => (filters.sortBy = evt.target.value)
-
-const onChangeSearchInput = evt => (filters.searchQuery = evt.target.value)
-
-const fetchFavorites = async () => {
-  try {
-    const { data: favorites } = await axios.get(
-      'https://c3357c2bd0a9e3f6.mokky.dev/favorites',
-    )
-
-    goods.value = goods.value.map(item => {
-      const favorite = favorites.find(
-        favorite => favorite.productId === item.id,
-      )
-
-      if (!favorite) return item
-
-      return {
-        ...item,
-        isFavorite: true,
-        favoriteId: favorite.id,
-      }
-    })
-  } catch (error) {
-    console.error(error)
-  }
-}
-
-const addToFavorite = async item => {
-  try {
-    if (!item.isFavorite) {
-      item.isFavorite = true
-      const obj = {
-        productId: item.id,
-      }
-      const { data } = await axios.post(
-        'https://c3357c2bd0a9e3f6.mokky.dev/favorites',
-        obj,
-      )
-      item.favoriteId = data.id
-    } else {
-      item.isFavorite = false
-      await axios.delete(
-        `https://c3357c2bd0a9e3f6.mokky.dev/favorites/${item.favoriteId}`,
-      )
-      item.favoriteId = null
-    }
-  } catch (error) {
-    console.error(error)
-  }
-}
-
-const fetchItems = async () => {
-  try {
-    const params = {
-      sortBy: filters.sortBy,
-    }
-
-    if (filters.searchQuery) params.title = '*' + filters.searchQuery + '*'
-
-    const { data } = await axios.get(
-      'https://c3357c2bd0a9e3f6.mokky.dev/goods',
-      { params },
-    )
-    goods.value = data.map(obj => ({
-      ...obj,
-      isFavorite: false,
-      favoriteId: null,
-      isAdded: false,
-    }))
-  } catch (error) {
-    console.error(error)
-  }
-}
-// 1.1 Далее мы укажем, чтобы при загрузке страницы проверяем localStorage на наличие записи "cart" и если есть, то трансформируем её из строки в массив, а если нет, то вернётся пустой массив.
-onMounted(async () => {
-  cart.value = JSON.parse(localStorage.getItem('cart')) || []
-
-  await fetchItems()
-  await fetchFavorites()
-
-  goods.value = goods.value.map(item => ({
-    ...item,
-    isAdded: cart.value.some(cartItem => cartItem.id === item.id),
-  }))
-})
-
-watch(filters, fetchItems)
-
-watch(cart, () => {
-  goods.value = goods.value.map(item => ({ ...item, isAdded: false }))
-  closeDrawer()
-})
-
 // 1.0 Реализуем сохранение товаров в корзине в localStorage. watch будет следить за содержимым корзины cart и при этом делать глубокую проверку.
 watch(
   cart,
@@ -175,10 +77,11 @@ provide('cart', {
   addToCart,
   removeFromCart,
 })
+/* / Корзина */
 </script>
 
 <template>
-  <DrawerElement
+  <DrawerComp
     v-if="drawerOpened"
     :total-price="totalPrice"
     :vat-price="vatPrice"
@@ -187,38 +90,12 @@ provide('cart', {
   />
   <div class="w-4/5 m-auto bg-white rounded-xl shadow-xl mt-12">
     <HeaderItem :total-price="totalPrice" @open-drawer="openDrawer" />
+    <!-- 1.3 Далее мы вырезаем всю вёрстку, которая относится к главной странице и переносим её в HomeView.vue -->
+    <!-- 1.4 А теперь переносим всю необходимую для этой страницы логику в компонент HomeView.vue -->
+    <!-- 1.8 Здесь мы будем отображать сам HomeView. Для этого добавим "router-view", который даст понять приложению, что здесь будут рендериться все компоненты страниц. -->
+    <!-- [Переход в main.js] -->
     <div class="p-10">
-      <div class="flex justify-between items-center mb-8">
-        <h1 class="text-3xl font-bold">Все кроссовки</h1>
-        <div class="flex gap-3">
-          <select
-            @change="onChangeSelect"
-            class="py-2 px-3 border rounded-md outline-none"
-          >
-            <option value="title">По названию</option>
-            <option value="price">По цене (дешёвые)</option>
-            <option value="-price">По цене (дорогие)</option>
-          </select>
-          <div class="relative">
-            <img
-              class="absolute top-3 left-3.5"
-              src="/img/search.svg"
-              alt="Иконка поиска"
-            />
-            <input
-              @input="onChangeSearchInput"
-              class="border rounded-md py-2 pl-10 pr-2"
-              type="text"
-              placeholder="Поиск..."
-            />
-          </div>
-        </div>
-      </div>
-      <CardList
-        :goods="goods"
-        @add-to-favorite="addToFavorite"
-        @add-to-cart="onClickAddPlus"
-      />
+      <router-view></router-view>
     </div>
   </div>
 </template>

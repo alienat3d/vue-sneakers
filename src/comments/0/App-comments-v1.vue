@@ -6,7 +6,7 @@ import axios from 'axios'
 
 import HeaderItem from './components/HeaderItem.vue'
 import CardList from './components/CardList.vue'
-import DrawerElement from './components/DrawerElement.vue'
+import DrawerComp from './components/DrawerComp.vue'
 
 // Чтобы отрендерить данные в веб-приложении нам понадобится реактивное состояние в компоненте, а точнее ref
 const goods = ref([])
@@ -70,7 +70,7 @@ watch(filters, fetchItems)
 </script>
 
 <template>
-  <!-- <DrawerElement /> -->
+  <!-- <DrawerComp /> -->
   <div class="w-4/5 m-auto bg-white rounded-xl shadow-xl mt-12">
     <HeaderItem />
 
