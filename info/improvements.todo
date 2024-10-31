@@ -1,0 +1,7 @@
+Improvements:
+	[Misc]:
+		- remove background for empty-cart.jpg & complete-order.jpg and convert them to .webp
+	[Index]:
+		- Add the banner slider;
+  [Favorites]:
+		- Add/Remove to/from Cart & Add/Remove to/from Favorites functions are also active on the Favorites page;

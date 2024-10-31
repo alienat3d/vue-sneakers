@@ -1,9 +1,7 @@
-<!-- 1.0 Теперь поработаем с избранным. В принципе структура будет похожа на ту, что мы имеем на главной, но только отображаться будут лишь те товары, что мы отметили добавлением в избранное нажав на кнопку сердечка. -->
-<!-- 1.1 Но сперва установим Vue Router для мгновенных переходов, как описано на странице: https://router.vuejs.org/installation.html -->
-<!-- 1.2 В структуре файлов в ./src/ создадим папку "pages", где будут храниться страницы. Главная страница будет HomeView.vue -->
 <script setup>
 import { ref, provide, watch, computed } from 'vue'
-import axios from 'axios'
+// [Удалено за ненадобностью]
+// import axios from 'axios'
 
 import HeaderItem from './components/HeaderItem.vue'
 import DrawerComp from './components/DrawerComp.vue'
@@ -11,7 +9,9 @@ import DrawerComp from './components/DrawerComp.vue'
 /* Корзина */
 const cart = ref([])
 
-const isCreatingOrder = ref(false)
+// 1.0 Создадим оповещение пользователя сообщением с его номером заказа, после того, как он нажмёт кнопку "Отправить заказ". У нас есть. У нас уже есть состояние isCreatingOrder, который указывает на то, что заказ создаётся и функция createOrder(), которая создаёт и отправляет новый заказ. ↓
+// [Перенесено в DrawerComp]
+// const isCreatingOrder = ref(false)
 
 const drawerOpened = ref(false)
 
@@ -20,12 +20,6 @@ const totalPrice = computed(() =>
 )
 
 const vatPrice = computed(() => Math.round((totalPrice.value * 20) / 100))
-
-const cartIsEmpty = computed(() => cart.value.length === 0)
-
-const cartButtonDisabled = computed(
-  () => isCreatingOrder.value || cartIsEmpty.value,
-)
 
 const openDrawer = () => (drawerOpened.value = true)
 
@@ -41,9 +35,10 @@ const removeFromCart = item => {
   item.isAdded = false
 }
 
-// 1.6 Функции, которые используются в разных компонентах, как createOrder оставим на верхнем уровне.
-// [Переход в HomeView]
-const createOrder = async () => {
+// 1.1 Вообще говоря, эту функцию лучше бы вынести в DrawerComp. Т.к. она относится именно к корзине товаров. Как в прочем и вышеозначенный isCreatingOrder.
+// [Переход в DrawerComp]
+// [Перенесено в DrawerComp]
+/* const createOrder = async () => {
   try {
     isCreatingOrder.value = true
     const { data } = await axios.post(
@@ -59,9 +54,8 @@ const createOrder = async () => {
   } finally {
     isCreatingOrder.value = false
   }
-}
+} */
 
-// 1.0 Реализуем сохранение товаров в корзине в localStorage. watch будет следить за содержимым корзины cart и при этом делать глубокую проверку.
 watch(
   cart,
   () => {
@@ -81,19 +75,17 @@ provide('cart', {
 </script>
 
 <template>
+  <!-- [ Удалены из компонента DrawerComp
+  :button-disabled="cartButtonDisabled"
+  @create-order="createOrder" ] -->
   <DrawerComp
     v-if="drawerOpened"
     :total-price="totalPrice"
     :vat-price="vatPrice"
-    :button-disabled="cartButtonDisabled"
-    @create-order="createOrder"
   />
   <div class="w-4/5 m-auto bg-white rounded-xl shadow-xl mt-12">
     <HeaderItem :total-price="totalPrice" @open-drawer="openDrawer" />
-    <!-- 1.3 Далее мы вырезаем всю вёрстку, которая относится к главной странице и переносим её в HomeView.vue -->
-    <!-- 1.4 А теперь переносим всю необходимую для этой страницы логику в компонент HomeView.vue -->
-    <!-- 1.8 Здесь мы будем отображать сам HomeView. Для этого добавим "router-view", который даст понять приложению, что здесь будут рендериться все компоненты страниц. -->
-    <!-- [Переход в main.js] -->
+
     <div class="p-10">
       <router-view></router-view>
     </div>

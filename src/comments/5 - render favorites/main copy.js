@@ -4,7 +4,6 @@ import { createApp } from 'vue'
 // Подключаем анимацию
 import { autoAnimatePlugin } from '@formkit/auto-animate/vue'
 // /== Подключаем анимацию ==
-
 // == Подключаем роутер ==
 import { createRouter, createWebHistory } from 'vue-router'
 // /== Подключаем роутер ==
@@ -32,9 +31,10 @@ const app = createApp(App)
 // == Подключаем роутер ==
 app.use(router)
 // /== Подключаем роутер ==
-
+// [переход в HeaderItem]
 // == Подключаем анимацию ==
 app.use(autoAnimatePlugin)
 // /== Подключаем анимацию ==
+// [переход в CardList]
 
 app.mount('#app')

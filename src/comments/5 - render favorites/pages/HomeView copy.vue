@@ -1,3 +1,5 @@
+<!-- 1.7 Теперь у нас есть отдельный компонент с вёрсткой и логикой главной страницы. -->
+<!-- [Переход в App] -->
 <script setup>
 import { inject, reactive, watch, ref, onMounted } from 'vue'
 import axios from 'axios'
@@ -19,6 +21,7 @@ const onChangeSelect = evt => (filters.sortBy = evt.target.value)
 
 const onChangeSearchInput = evt => (filters.searchQuery = evt.target.value)
 
+// 1.3.3 Добавляется в объект obj также также item
 const addToFavorite = async item => {
   try {
     if (!item.isFavorite) {
@@ -89,6 +92,7 @@ const fetchItems = async () => {
   }
 }
 
+// 1.1 Далее мы укажем, чтобы при загрузке страницы проверяем localStorage на наличие записи "cart" и если есть, то трансформируем её из строки в массив, а если нет, то вернётся пустой массив.
 onMounted(async () => {
   cart.value = JSON.parse(localStorage.getItem('cart')) || []
 

@@ -7,6 +7,7 @@ const emit = defineEmits(['openDrawer'])
 </script>
 <template>
   <header class="flex justify-between border-b border-gray-200 px-10 py-8">
+    <!-- 1.9.0 Теперь там, где нам нужны ссылки мы используем <RouterLink>. Здесь... -->
     <RouterLink to="/">
       <div class="flex items-center gap-4">
         <img
@@ -29,6 +30,7 @@ const emit = defineEmits(['openDrawer'])
         <img src="/img/cart.svg" alt="Иконка продуктовая тележка" />
         <b>{{ totalPrice }} руб.</b>
       </li>
+      <!-- 1.9.1 ...и здесь. -->
       <RouterLink to="/favorites">
         <li
           class="menu-item flex items-center gap-3 text-gray-500 cursor-pointer transition hover:text-black"
