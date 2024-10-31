@@ -1,3 +1,4 @@
+<!-- 2.0 Усовершенствуем логику поиска с помощью функции debounce из библиотеки lodash. Для начала установим её (npm i lodash.debounce) и импортируем. Далее находим функцию поиска: ↓ -->
 <script setup>
 import { inject, reactive, watch, ref, onMounted } from 'vue'
 import axios from 'axios'
@@ -19,6 +20,7 @@ const onClickAddPlus = item =>
 
 const onChangeSelect = evt => (filters.sortBy = evt.target.value)
 
+// 2.1 Модифицируем функцию поиска по товарам
 const onChangeSearchInput = debounce(
   evt => (filters.searchQuery = evt.target.value),
   300,
@@ -108,6 +110,7 @@ onMounted(async () => {
 
 watch(cart, () => {
   goods.value = goods.value.map(item => ({ ...item, isAdded: false }))
+  // closeDrawer()
 })
 
 watch(filters, fetchItems)
