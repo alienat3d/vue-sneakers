@@ -21,12 +21,14 @@ const onChangeSelect = evt => (filters.sortBy = evt.target.value)
 
 const onChangeSearchInput = evt => (filters.searchQuery = evt.target.value)
 
+// 1.3.3 Добавляется в объект obj также также item
 const addToFavorite = async item => {
   try {
     if (!item.isFavorite) {
       item.isFavorite = true
       const obj = {
-        productId: item.id,
+        good_id: item.id,
+        // item,
       }
       const { data } = await axios.post(
         'https://c3357c2bd0a9e3f6.mokky.dev/favorites',
@@ -52,9 +54,7 @@ const fetchFavorites = async () => {
     )
 
     goods.value = goods.value.map(item => {
-      const favorite = favorites.find(
-        favorite => favorite.productId === item.id,
-      )
+      const favorite = favorites.find(favorite => favorite.good_id === item.id)
 
       if (!favorite) return item
 
